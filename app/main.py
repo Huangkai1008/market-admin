@@ -1,8 +1,10 @@
+import uvicorn
+
 from fastapi import FastAPI
 
-from .models import database
-from .core.config import PROJECT_NAME
-from .routers import index
+from app.models import database
+from app.core.config import PROJECT_NAME
+from app.routers import index
 
 app = FastAPI(title=PROJECT_NAME)
 
@@ -17,3 +19,5 @@ async def startup():
 @app.on_event('shutdown')
 async def shutdown():
     await database.disconnect()
+
+uvicorn.run(app, host='0.0.0.0', port=8000)

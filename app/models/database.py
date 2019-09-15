@@ -1,8 +1,8 @@
 from tortoise import Tortoise
 
-from app.core.config import DB_TYPE, USERNAME, PASSWORD, HOST, PORT, DATABASE
+from app.core.config import DB_TYPE, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DATABASE
 
-DB_URL = f'{DB_TYPE}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
+DB_URL = f'{DB_TYPE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DATABASE}'
 
 
 async def init():
