@@ -23,6 +23,7 @@ pip install pipenv
 
 ```bash
 pipenv install                # Add the libs
+uvicorn app.main:app --reload   # Start the uvicorn server
 ```
 
 ## 许可证
