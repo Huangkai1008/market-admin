@@ -2,7 +2,7 @@ import uvicorn
 
 from fastapi import FastAPI
 
-from app.models import database
+from app.db import database
 from app.core.config import PROJECT_NAME
 from app.routers import index
 

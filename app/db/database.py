@@ -9,7 +9,7 @@ async def init():
     """初始化连接"""
     await Tortoise.init(
         db_url=DB_URL,
-        modules={'models': ['app.models']}
+        modules={'db': ['app.db']}
     )
 
 
