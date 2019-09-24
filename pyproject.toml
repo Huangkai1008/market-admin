@@ -7,7 +7,10 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-
+fastapi = {version = "0.38.1", extras = ["all"]}
+python-dotenv = "0.10.2"
+tortoise-orm = "0.13.5"
+aiomysql = "0.0.20"
 [tool.poetry.dev-dependencies]
 
 [[tool.poetry.source]]
