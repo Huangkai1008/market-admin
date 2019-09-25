@@ -2,6 +2,9 @@
 
 market-admin is a Market background management system with [fastapi](https://fastapi.tiangolo.com/).
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+
 ## Contents
 
 - [Installation](#installation)

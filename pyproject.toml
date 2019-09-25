@@ -13,6 +13,9 @@ tortoise-orm = "0.13.5"
 aiomysql = "0.0.20"
 [tool.poetry.dev-dependencies]
 
+[tool.black]
+skip-string-normalization = true
+
 [[tool.poetry.source]]
 name = "tsinghua"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
