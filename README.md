@@ -14,15 +14,16 @@ market-admin is a Market background management system with [fastapi](https://fas
 go -get https://github.com/Huangkai1008/market-admin
 ```
 
-2. Make sure you have installed [pipenv](https://docs.pipenv.org/en/latest/)
+2. Make sure you have installed [poetry](https://github.com/sdispater/poetry)
 ```bash
-pip install pipenv
+pip install poetry
 ```
 
 ## Usage
 
 ```bash
-pipenv install                # Add the libs
+poetry install                  # Add the libs
+poetry shell                    # Start the virtualenvs
 uvicorn app.main:app --reload   # Start the uvicorn server
 ```
 

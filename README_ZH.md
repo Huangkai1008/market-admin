@@ -14,15 +14,16 @@ market-admin 是一个使用[fastapi](https://fastapi.tiangolo.com/)搭建的商
 go -get https://github.com/Huangkai1008/market-admin
 ```
 
-2. 确保你安装了[pipenv](https://docs.pipenv.org/en/latest/)
+2. 确保你安装了[poetry](https://github.com/sdispater/poetry)
 ```bash
-pip install pipenv
+pip install poetry
 ```
 
 ## 使用
 
 ```bash
-pipenv install                # Add the libs
+poetry install                  # Add the libs
+poetry shell                    # Start the virtualenvs
 uvicorn app.main:app --reload   # Start the uvicorn server
 ```
 
