@@ -1,12 +1,14 @@
 """
 商品分类
 """
+from app.models.base import OrmModel
 
-from pydantic import Schema, BaseModel
+
+from pydantic import Schema
 from pydantic.dataclasses import dataclass
 
 
-class CategoryRead(BaseModel):
+class CategoryRead(OrmModel):
     """商品分类-查询"""
 
     id: int
@@ -15,9 +17,6 @@ class CategoryRead(BaseModel):
     cat_level: int
     cat_keywords: str = None
     cat_desc: str = None
-
-    class Config:
-        orm_mode = True
 
 
 @dataclass
@@ -33,3 +32,12 @@ class CategoryCreate(CategoryBase):
     cat_level: int = Schema(...)  # 分类等级  0 --> 1级;  1 --> 2级
     cat_keywords: str = Schema(None, max_length=255)  # 分类关键词
     cat_desc: str = None
+
+
+class CategorySpec(OrmModel):
+    """商品分类规格-查询"""
+
+    id: int
+    spec_number: str
+    spec_name: str
+    join_select = bool
