@@ -1,10 +1,13 @@
+from app.db.base import ModelTimeMixin
+
 from tortoise import fields
 from tortoise.models import Model
+
 
 __all__ = ['ProductCategory']
 
 
-class ProductCategory(Model):
+class ProductCategory(Model, ModelTimeMixin):
     """商品分类"""
 
     id = fields.IntField(pk=True)
@@ -16,4 +19,4 @@ class ProductCategory(Model):
     cat_desc = fields.TextField(null=True)  # 分类描述
 
     class Meta:
-        table = "product_category"
+        table = 'product_category'
