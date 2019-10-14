@@ -24,5 +24,5 @@ class DatetimeField(_DatetimeField):
 class ModelTimeMixin:
     """增加create_time update_time字段"""
 
-    create_time = DatetimeField(auto_now_add=True, description='创建时间')
-    update_time = DatetimeField(auto_now=True, description='上次更新时间')
+    create_time = DatetimeField(null=True, auto_now_add=True, description='创建时间')
+    update_time = DatetimeField(null=True, auto_now=True, description='上次更新时间')

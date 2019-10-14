@@ -4,7 +4,7 @@ from tortoise import fields
 from tortoise.models import Model
 
 
-__all__ = ['ProductCategory']
+__all__ = ['ProductCategory', 'ProductCategorySpec']
 
 
 class ProductCategory(Model, ModelTimeMixin):
@@ -22,3 +22,19 @@ class ProductCategory(Model, ModelTimeMixin):
 
     class Meta:
         table = 'product_category'
+
+
+class ProductCategorySpec(Model):
+    """
+    商品分类规格 用于确定商品的规格模板
+    """
+
+    id = fields.IntField(pk=True)
+    spec_number = fields.CharField(max_length=32, description='分类规格编号')  # color
+    spec_name = fields.CharField(max_length=64, description='分类规格名称')  # 颜色
+    join_select = fields.BooleanField(description='是否可以筛选')
+    cat_id = fields.IntField(description='商品分类id')
+
+    class Meta:
+        table = 'product_category_spec'
+        unique_together = (('cat_id', 'spec_number'), ('cat_id', 'spec_name'))
