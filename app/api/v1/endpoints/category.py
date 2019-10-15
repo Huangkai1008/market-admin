@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Query, Body
+from starlette.status import HTTP_201_CREATED
 
 from app.db.queries import category as category_api
 from app.models.category import CategoryRead, CategoryCreate
@@ -22,7 +23,7 @@ async def get_product_categories(
     return categories
 
 
-@router.post('/', response_model=CategoryRead)
+@router.post('/', response_model=CategoryRead, status_code=HTTP_201_CREATED)
 async def create_product_category(category_create: CategoryCreate = Body(...)):
     """创建产品分类"""
     parent_id = category_create.parent_id  # 获取父分类

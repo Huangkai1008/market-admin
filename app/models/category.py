@@ -21,7 +21,7 @@ class CategoryRead(OrmModel):
 
 @dataclass
 class CategoryBase:
-    parent_id: int = Schema(0)
+    parent_id: int = Schema(..., ge=0)
     cat_name: str = Schema(..., max_length=64)
 
 
@@ -29,7 +29,7 @@ class CategoryBase:
 class CategoryCreate(CategoryBase):
     """商品分类-创建"""
 
-    cat_level: int = Schema(...)  # 分类等级  0 --> 1级;  1 --> 2级
+    cat_level: int = Schema(..., ge=0)  # 分类等级  0 --> 1级;  1 --> 2级
     cat_keywords: str = Schema(None, max_length=255)  # 分类关键词
     cat_desc: str = None
 
