@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Query, Body, Path
 from starlette.status import HTTP_201_CREATED
 
@@ -8,6 +10,9 @@ from app.models.category import (
     CategoryList,
     CategoryCreate,
     CategoryUpdate,
+    CategorySpec,
+    CategorySpecCreate,
+    CategorySpecUpdate,
 )
 
 
@@ -59,3 +64,43 @@ async def update_product_category(
 
     update_category = await category_api.update_category(cat_id, category_update)
     return update_category
+
+
+@router.get('/{cat_id}/specs', response_model=List[CategorySpec])
+async def get_category_specs(cat_id=Path(..., title='产品分类id', ge=1)):
+    """查看产品分类下的规格信息"""
+    specs = await category_api.get_category_specs(cat_id)
+    return specs
+
+
+@router.post('/{cat_id}/specs', status_code=HTTP_201_CREATED)
+async def create_category_specs(
+    cat_id=Path(..., title='产品分类id', ge=1),
+    spec_creates: List[CategorySpecCreate] = Body(...),
+):
+    """新增产品分类下的规格信息"""
+    category = await category_api.get_category(cat_id)
+    if not category:
+        raise BadRequestException('不存在的产品分类')
+
+    await category_api.bulk_create_category_specs(cat_id, spec_creates)
+    return dict()
+
+
+@router.put('/{cat_id}/specs/{spec_id}', response_model=CategorySpec)
+async def update_category_spec(
+    cat_id=Path(..., title='产品分类id', ge=1),
+    spec_id=Path(..., title='规格id', ge=1),
+    spec_update: CategorySpecUpdate = Body(...),
+):
+    """修改产品分类下的规格信息"""
+    category = await category_api.get_category(cat_id)
+    if not category:
+        raise BadRequestException('不存在的产品分类')
+
+    spec = await category_api.get_category_spec(spec_id)
+    if not spec:
+        raise BadRequestException('不存在的规格信息')
+
+    spec = await category_api.update_category_spec(spec_id, spec_update)
+    return spec

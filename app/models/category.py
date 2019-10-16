@@ -52,4 +52,19 @@ class CategorySpec(OrmModel):
     id: int
     spec_number: str
     spec_name: str
-    join_select = bool
+    join_select: bool
+    cat_id: int
+
+
+class CategorySpecCreate(BaseModel):
+    """商品分类规格-创建"""
+
+    spec_number: str = Schema(..., max_length=32)
+    spec_name: str = Schema(..., max_length=64)
+    join_select: bool = Schema(...)
+
+
+class CategorySpecUpdate(BaseModel):
+    """商品分类规格-修改"""
+
+    join_select: bool = Schema(...)
