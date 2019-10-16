@@ -1,11 +1,12 @@
 """
 商品分类
 """
+from typing import List
+
 from app.models.base import OrmModel
 
 
-from pydantic import Schema
-from pydantic.dataclasses import dataclass
+from pydantic import Schema, BaseModel
 
 
 class CategoryRead(OrmModel):
@@ -19,19 +20,30 @@ class CategoryRead(OrmModel):
     cat_desc: str = None
 
 
-@dataclass
-class CategoryBase:
-    parent_id: int = Schema(..., ge=0)
-    cat_name: str = Schema(..., max_length=64)
+class CategoryList(OrmModel):
+    """商品分类-列表"""
+
+    categories: List[CategoryRead]
+    total: int
 
 
-@dataclass
+class CategoryBase(BaseModel):
+    """商品分类"""
+
+    cat_keywords: str = Schema(None, max_length=255)  # 分类关键词
+    cat_desc: str = None
+
+
 class CategoryCreate(CategoryBase):
     """商品分类-创建"""
 
+    parent_id: int = Schema(..., ge=0)
+    cat_name: str = Schema(..., max_length=64)
     cat_level: int = Schema(..., ge=0)  # 分类等级  0 --> 1级;  1 --> 2级
-    cat_keywords: str = Schema(None, max_length=255)  # 分类关键词
-    cat_desc: str = None
+
+
+class CategoryUpdate(BaseModel):
+    """商品分类-修改"""
 
 
 class CategorySpec(OrmModel):
