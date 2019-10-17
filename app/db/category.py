@@ -1,7 +1,7 @@
-from app.db.base import ModelTimeMixin
-
 from tortoise import fields
 from tortoise.models import Model
+
+from app.db.base import ModelTimeMixin
 
 
 __all__ = ['ProductCategory', 'ProductCategorySpec']
@@ -32,8 +32,8 @@ class ProductCategorySpec(Model):
     id = fields.IntField(pk=True)
     spec_number = fields.CharField(max_length=32, description='分类规格编号')  # color
     spec_name = fields.CharField(max_length=64, description='分类规格名称')  # 颜色
-    join_select = fields.BooleanField(description='是否可以筛选')
-    cat_id = fields.IntField(description='商品分类id')
+    join_select = fields.BooleanField(index=True, description='是否可以筛选')
+    cat_id = fields.IntField(index=True, description='商品分类id')
 
     class Meta:
         table = 'product_category_spec'
