@@ -4,7 +4,7 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-@router.get('/ping')
+@router.get('/ping', summary='测试联通性')
 async def ping():
     return dict(
         name='market-admin',
