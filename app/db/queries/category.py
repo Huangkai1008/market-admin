@@ -2,15 +2,13 @@ from typing import List, Tuple
 
 from fastapi.encoders import jsonable_encoder
 
-from app.db.category import ProductCategory, ProductCategorySpec, ProductCategoryAttr
+from app.db.category import ProductCategory, ProductCategorySpec
 from app.db.queries import utils
 from app.models.category import (
     CategoryCreate,
     CategoryUpdate,
     CategorySpecCreate,
     CategorySpecUpdate,
-    CategoryAttrCreate,
-    CategoryAttrUpdate,
 )
 
 
@@ -95,44 +93,3 @@ async def update_category_spec(
     await ProductCategorySpec.get(id=spec_id).update(**spec_update_data)
     spec = await get_category_spec(spec_id)
     return spec
-
-
-async def get_category_attrs(cat_id: int) -> List[ProductCategoryAttr]:
-    """获取属性信息"""
-    conditions = dict()
-
-    conditions['cat_id'] = cat_id
-
-    queryset = await ProductCategoryAttr.filter(**conditions).all()
-    return queryset
-
-
-async def get_category_attr(attr_id: int) -> ProductCategoryAttr:
-    """获取单个属性信息"""
-    queryset = await ProductCategoryAttr.filter(id=attr_id).first()
-    return queryset
-
-
-async def bulk_create_category_attrs(
-    cat_id: int, attr_creates: List[CategoryAttrCreate]
-):
-    """批量创建属性信息"""
-    attr_creates_data = jsonable_encoder(attr_creates)
-
-    await ProductCategoryAttr.bulk_create(
-        [
-            ProductCategoryAttr(**attr_create_data, cat_id=cat_id)
-            for attr_create_data in attr_creates_data
-        ]
-    )
-    return
-
-
-async def update_category_attr(
-    attr_id: int, attr_update: CategoryAttrUpdate
-) -> ProductCategoryAttr:
-    """修改商品分类属性"""
-    attr_update_data = jsonable_encoder(attr_update)
-    await ProductCategoryAttr.get(id=attr_id).update(**attr_update_data)
-    attr = await get_category_attr(attr_id)
-    return attr

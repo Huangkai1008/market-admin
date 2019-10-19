@@ -4,7 +4,7 @@
 from typing import List
 
 from app.models.base import OrmModel
-
+from app.constants import CategorySpecType
 
 from pydantic import Schema, BaseModel
 
@@ -12,12 +12,12 @@ from pydantic import Schema, BaseModel
 class CategoryRead(OrmModel):
     """商品分类-查询"""
 
-    id: int
-    parent_id: int
-    cat_name: str
-    cat_level: int
-    cat_keywords: str = None
-    cat_desc: str = None
+    id: int = Schema(..., title='ID')
+    parent_id: int = Schema(..., title='父分类, 0表示一级分类')
+    cat_name: str = Schema(..., title='分类名')
+    cat_level: int = Schema(..., title='分类等级  0 --> 1级;  1 --> 2级')
+    cat_keywords: str = Schema(None, max_length=255, title='分类关键词')
+    cat_desc: str = Schema(None, title='分类描述')
 
 
 class CategoryList(OrmModel):
@@ -30,16 +30,16 @@ class CategoryList(OrmModel):
 class CategoryBase(BaseModel):
     """商品分类"""
 
-    cat_keywords: str = Schema(None, max_length=255)  # 分类关键词
-    cat_desc: str = None
+    cat_keywords: str = Schema(None, max_length=255, title='分类关键词')
+    cat_desc: str = Schema(None, title='分类描述')
 
 
 class CategoryCreate(CategoryBase):
     """商品分类-创建"""
 
-    parent_id: int = Schema(..., ge=0)
-    cat_name: str = Schema(..., max_length=64)
-    cat_level: int = Schema(..., ge=0)  # 分类等级  0 --> 1级;  1 --> 2级
+    parent_id: int = Schema(..., ge=0, title='父分类, 0表示一级分类')
+    cat_name: str = Schema(..., max_length=64, title='分类名')
+    cat_level: int = Schema(..., ge=0, title='分类等级  0 --> 1级;  1 --> 2级')
 
 
 class CategoryUpdate(BaseModel):
@@ -49,44 +49,24 @@ class CategoryUpdate(BaseModel):
 class CategorySpec(OrmModel):
     """商品分类规格-查询"""
 
-    id: int
-    spec_number: str
-    spec_name: str
-    join_select: bool
-    cat_id: int
+    id: int = Schema(..., title='ID')
+    spec_number: str = Schema(..., max_length=32, title='分类规格编号')
+    spec_name: str = Schema(..., max_length=64, title='分类规格名称')
+    join_select: bool = Schema(..., title='是否可以筛选')
+    spec_type: CategorySpecType = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')
+    cat_id: int = Schema(..., title='分类id')
 
 
 class CategorySpecCreate(BaseModel):
     """商品分类规格-创建"""
 
-    spec_number: str = Schema(..., max_length=32)
-    spec_name: str = Schema(..., max_length=64)
-    join_select: bool = Schema(...)
+    spec_number: str = Schema(..., max_length=32, title='分类规格编号')
+    spec_name: str = Schema(..., max_length=64, title='分类规格名称')
+    join_select: bool = Schema(..., title='是否可以筛选')
+    spec_type: CategorySpecType = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')
 
 
 class CategorySpecUpdate(BaseModel):
     """商品分类规格-修改"""
 
-    join_select: bool = Schema(...)
-
-
-class CategoryAttr(OrmModel):
-    """商品分类属性-查询"""
-
-    id: int
-    attr_name: str
-    join_select: bool
-    cat_id: int
-
-
-class CategoryAttrCreate(BaseModel):
-    """商品分类属性-创建"""
-
-    attr_name: str = Schema(..., max_length=64)
-    join_select: bool = Schema(...)
-
-
-class CategoryAttrUpdate(BaseModel):
-    """商品分类属性-修改"""
-
-    join_select: bool = Schema(...)
+    join_select: bool = Schema(..., title='是否可以筛选')

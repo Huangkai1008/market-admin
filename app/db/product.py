@@ -4,7 +4,7 @@ from tortoise.models import Model
 from app.db.base import ModelTimeMixin
 
 
-__all__ = ['Product', 'Item', 'ItemSpec', 'ItemAttr']
+__all__ = ['Product', 'Item', 'ItemSpec']
 
 
 class Product(Model, ModelTimeMixin):
@@ -36,7 +36,7 @@ class Item(Model, ModelTimeMixin):
 class ItemSpec(Model, ModelTimeMixin):
     """
     商品规格信息
-    继承分类规格信息 属于销售信息 不可在分类规格信息上扩展
+    继承分类规格信息 可在分类规格信息上扩展
     """
 
     item_id = fields.IntField()
@@ -48,18 +48,3 @@ class ItemSpec(Model, ModelTimeMixin):
         table = 'item_spec'
         pk_field = {'item_id', 'spec_number'}
         unique_together = [('item_id', 'spec_name')]
-
-
-class ItemAttr(Model, ModelTimeMixin):
-    """
-    商品属性信息
-    继承分类属性信息 参与筛选与展示 可在分类属性信息上扩展
-    """
-
-    item_id = fields.IntField()
-    attr_name = fields.CharField(max_length=64, description='分类属性名称')  # 内存容量 ...
-    attr_value = fields.CharField(max_length=128, description='分类属性值')  # 16G ...
-
-    class Meta:
-        table = 'item_attr'
-        pk_field = {'item_id', 'attr_name'}

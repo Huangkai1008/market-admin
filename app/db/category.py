@@ -4,7 +4,7 @@ from tortoise.models import Model
 from app.db.base import ModelTimeMixin
 
 
-__all__ = ['ProductCategory', 'ProductCategorySpec', 'ProductCategoryAttr']
+__all__ = ['ProductCategory', 'ProductCategorySpec']
 
 
 class ProductCategory(Model, ModelTimeMixin):
@@ -33,24 +33,9 @@ class ProductCategorySpec(Model):
     spec_number = fields.CharField(max_length=32, description='分类规格编号')  # color ...
     spec_name = fields.CharField(max_length=64, description='分类规格名称')  # 颜色 ...
     join_select = fields.BooleanField(index=True, description='是否可以筛选')
+    spec_type = fields.IntField(index=True, description='规格类型  1 销售规格属性 2 展示属性')
     cat_id = fields.IntField(index=True, description='商品分类id')
 
     class Meta:
         table = 'product_category_spec'
         unique_together = (('cat_id', 'spec_number'), ('cat_id', 'spec_name'))
-
-
-class ProductCategoryAttr(Model):
-    """
-    商品分类属性
-    基础属性模板 继承后可在商品SKU定义处扩展
-    """
-
-    id = fields.IntField(pk=True)
-    attr_name = fields.CharField(max_length=64, description='分类属性名称')  # 内存容量 ...
-    join_select = fields.BooleanField(index=True, description='是否可以筛选')
-    cat_id = fields.IntField(index=True, description='商品分类id')
-
-    class Meta:
-        table = 'product_category_attr'
-        unique_together = (('cat_id', 'attr_name'),)

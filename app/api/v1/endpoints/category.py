@@ -13,9 +13,6 @@ from app.models.category import (
     CategorySpec,
     CategorySpecCreate,
     CategorySpecUpdate,
-    CategoryAttr,
-    CategoryAttrCreate,
-    CategoryAttrUpdate,
 )
 
 
@@ -60,7 +57,8 @@ async def create_product_category(category_create: CategoryCreate = Body(...)):
 
 @router.put('/{cat_id}', response_model=CategoryRead, summary='修改产品分类')
 async def update_product_category(
-    cat_id=Path(..., title='产品分类id', ge=1), category_update: CategoryUpdate = Body(...)
+    cat_id=Path(..., ge=1, description='产品分类id'),
+    category_update: CategoryUpdate = Body(...),
 ):
     """修改产品分类"""
     category = await category_api.get_category(cat_id)
@@ -74,7 +72,7 @@ async def update_product_category(
 @router.get(
     '/{cat_id}/specs', response_model=List[CategorySpec], summary='查看产品分类下的规格信息'
 )
-async def get_category_specs(cat_id=Path(..., title='产品分类id', ge=1)):
+async def get_category_specs(cat_id=Path(..., ge=1, description='产品分类id')):
     """查看产品分类下的规格信息"""
     specs = await category_api.get_category_specs(cat_id)
     return specs
@@ -82,7 +80,7 @@ async def get_category_specs(cat_id=Path(..., title='产品分类id', ge=1)):
 
 @router.post('/{cat_id}/specs', status_code=HTTP_201_CREATED, summary='新增产品分类下的规格信息')
 async def create_category_specs(
-    cat_id=Path(..., title='产品分类id', ge=1),
+    cat_id=Path(..., ge=1, description='产品分类id'),
     spec_creates: List[CategorySpecCreate] = Body(...),
 ):
     """新增产品分类下的规格信息"""
@@ -98,8 +96,8 @@ async def create_category_specs(
     '/{cat_id}/specs/{spec_id}', response_model=CategorySpec, summary='修改产品分类下的规格信息'
 )
 async def update_category_spec(
-    cat_id=Path(..., title='产品分类id', ge=1),
-    spec_id=Path(..., title='规格id', ge=1),
+    cat_id=Path(..., ge=1, description='产品分类id'),
+    spec_id=Path(..., ge=1, description='规格id'),
     spec_update: CategorySpecUpdate = Body(...),
 ):
     """修改产品分类下的规格信息"""
@@ -113,47 +111,3 @@ async def update_category_spec(
 
     spec = await category_api.update_category_spec(spec_id, spec_update)
     return spec
-
-
-@router.get(
-    '/{cat_id}/attrs', response_model=List[CategoryAttr], summary='查看产品分类下的属性信息'
-)
-async def get_category_attrs(cat_id=Path(..., title='产品分类id', ge=1)):
-    """查看产品分类下的属性信息"""
-    attrs = await category_api.get_category_attrs(cat_id)
-    return attrs
-
-
-@router.post('/{cat_id}/attrs', status_code=HTTP_201_CREATED, summary='新增产品分类下的属性信息')
-async def create_category_attrs(
-    cat_id=Path(..., title='产品分类id', ge=1),
-    attr_creates: List[CategoryAttrCreate] = Body(...),
-):
-    """新增产品分类下的属性信息"""
-    category = await category_api.get_category(cat_id)
-    if not category:
-        raise BadRequestException('不存在的产品分类')
-
-    await category_api.bulk_create_category_attrs(cat_id, attr_creates)
-    return dict()
-
-
-@router.put(
-    '/{cat_id}/attrs/{attr_id}', response_model=CategoryAttr, summary='修改产品分类下的属性信息'
-)
-async def update_category_attr(
-    cat_id=Path(..., title='产品分类id', ge=1),
-    attr_id=Path(..., title='属性id', ge=1),
-    attr_update: CategoryAttrUpdate = Body(...),
-):
-    """修改产品分类下的属性信息"""
-    category = await category_api.get_category(cat_id)
-    if not category:
-        raise BadRequestException('不存在的产品分类')
-
-    attr = await category_api.get_category_attr(attr_id)
-    if not attr:
-        raise BadRequestException('不存在的规格信息')
-
-    attr = await category_api.update_category_attr(cat_id, attr_update)
-    return attr
