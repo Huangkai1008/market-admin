@@ -68,3 +68,25 @@ class CategorySpecUpdate(BaseModel):
     """商品分类规格-修改"""
 
     join_select: bool = Schema(...)
+
+
+class CategoryAttr(OrmModel):
+    """商品分类属性-查询"""
+
+    id: int
+    attr_name: str
+    join_select: bool
+    cat_id: int
+
+
+class CategoryAttrCreate(BaseModel):
+    """商品分类属性-创建"""
+
+    attr_name: str = Schema(..., max_length=64)
+    join_select: bool = Schema(...)
+
+
+class CategoryAttrUpdate(BaseModel):
+    """商品分类属性-修改"""
+
+    join_select: bool = Schema(...)

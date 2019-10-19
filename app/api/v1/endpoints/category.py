@@ -13,6 +13,9 @@ from app.models.category import (
     CategorySpec,
     CategorySpecCreate,
     CategorySpecUpdate,
+    CategoryAttr,
+    CategoryAttrCreate,
+    CategoryAttrUpdate,
 )
 
 
@@ -104,3 +107,43 @@ async def update_category_spec(
 
     spec = await category_api.update_category_spec(spec_id, spec_update)
     return spec
+
+
+@router.get('/{cat_id}/attrs', response_model=List[CategoryAttr])
+async def get_category_attrs(cat_id=Path(..., title='产品分类id', ge=1)):
+    """查看产品分类下的属性信息"""
+    attrs = await category_api.get_category_attrs(cat_id)
+    return attrs
+
+
+@router.post('/{cat_id}/attrs', status_code=HTTP_201_CREATED)
+async def create_category_attrs(
+    cat_id=Path(..., title='产品分类id', ge=1),
+    attr_creates: List[CategoryAttrCreate] = Body(...),
+):
+    """新增产品分类下的属性信息"""
+    category = await category_api.get_category(cat_id)
+    if not category:
+        raise BadRequestException('不存在的产品分类')
+
+    await category_api.bulk_create_category_attrs(cat_id, attr_creates)
+    return dict()
+
+
+@router.put('/{cat_id}/attrs/{attr_id}', response_model=CategoryAttr)
+async def update_category_attr(
+    cat_id=Path(..., title='产品分类id', ge=1),
+    attr_id=Path(..., title='属性id', ge=1),
+    attr_update: CategoryAttrUpdate = Body(...),
+):
+    """修改产品分类下的属性信息"""
+    category = await category_api.get_category(cat_id)
+    if not category:
+        raise BadRequestException('不存在的产品分类')
+
+    attr = await category_api.get_category_attr(attr_id)
+    if not attr:
+        raise BadRequestException('不存在的规格信息')
+
+    attr = await category_api.update_category_attr(cat_id, attr_update)
+    return attr
