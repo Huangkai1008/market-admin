@@ -9,7 +9,9 @@ async def init():
     """初始化连接"""
     await Tortoise.init(
         db_url=DB_URL,
-        modules={'db': ['app.db.category', 'app.db.brand', 'app.db.store']},
+        modules={
+            'db': ['app.db.category', 'app.db.brand', 'app.db.store', 'app.db.product']
+        },
     )
     await Tortoise.generate_schemas()
 
