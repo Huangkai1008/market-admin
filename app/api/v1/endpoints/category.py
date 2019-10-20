@@ -47,11 +47,9 @@ async def create_product_category(category_create: CategoryCreate = Body(...)):
         cat_level = 0
     else:
         parent_category = await category_api.get_category(parent_id)
-        cat_level = parent_category.cat_level
+        cat_level = parent_category.cat_level + 1
 
-    category_create.cat_level = cat_level
-
-    category = await category_api.create_category(category_create)
+    category = await category_api.create_category(category_create, cat_level=cat_level)
     return category
 
 

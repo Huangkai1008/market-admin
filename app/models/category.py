@@ -4,7 +4,6 @@
 from typing import List
 
 from app.models.base import OrmModel
-from app.constants import CategorySpecType
 
 from pydantic import Schema, BaseModel
 
@@ -39,7 +38,6 @@ class CategoryCreate(CategoryBase):
 
     parent_id: int = Schema(..., ge=0, title='父分类, 0表示一级分类')
     cat_name: str = Schema(..., max_length=64, title='分类名')
-    cat_level: int = Schema(..., ge=0, title='分类等级  0 --> 1级;  1 --> 2级')
 
 
 class CategoryUpdate(BaseModel):
@@ -53,7 +51,7 @@ class CategorySpec(OrmModel):
     spec_number: str = Schema(..., max_length=32, title='分类规格编号')
     spec_name: str = Schema(..., max_length=64, title='分类规格名称')
     join_select: bool = Schema(..., title='是否可以筛选')
-    spec_type: CategorySpecType = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')
+    spec_type: int = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')
     cat_id: int = Schema(..., title='分类id')
 
 
@@ -63,7 +61,7 @@ class CategorySpecCreate(BaseModel):
     spec_number: str = Schema(..., max_length=32, title='分类规格编号')
     spec_name: str = Schema(..., max_length=64, title='分类规格名称')
     join_select: bool = Schema(..., title='是否可以筛选')
-    spec_type: CategorySpecType = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')
+    spec_type: int = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')
 
 
 class CategorySpecUpdate(BaseModel):

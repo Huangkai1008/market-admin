@@ -20,5 +20,5 @@ async def get_brands(page: int = Query(1, ge=1), size: int = Query(10, ge=10)):
 )
 async def create_brand(brand_create: BrandCreate = Body(...)):
     """创建商品品牌"""
-    brand = brand_api.create_brand(brand_create)
+    brand = await brand_api.create_brand(brand_create)
     return brand
