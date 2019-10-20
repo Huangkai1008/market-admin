@@ -24,7 +24,7 @@ class ProductCategory(Model, ModelTimeMixin):
         table = 'product_category'
 
 
-class ProductCategorySpec(Model):
+class ProductCategorySpec(Model, ModelTimeMixin):
     """
     商品分类规格 用于确定商品的规格模板
     """

@@ -38,7 +38,7 @@ async def get_category(cat_id: int) -> ProductCategory:
 
 async def create_category(category_create: CategoryCreate) -> ProductCategory:
     """创建商品分类"""
-    category_create_data = jsonable_encoder(category_create, by_alias=False)
+    category_create_data = jsonable_encoder(category_create)
     category = ProductCategory(**category_create_data)
     await category.save()
     return category
