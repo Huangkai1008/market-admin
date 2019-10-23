@@ -15,10 +15,22 @@ class Product(Model, ModelTimeMixin):
     product_sn = fields.CharField(max_length=24, unique=True, description='商品货号')
     sub_title = fields.CharField(max_length=128, null=True, description='副标题')
     cat_id = fields.IntField(index=True, description='商品分类id')
-    brand_id = fields.IntField(index=True, description='品牌id')
-    store_id = fields.IntField(index=True, description='商铺id')
+    brand = fields.ForeignKeyField(
+        'db.Brand',
+        source_field='brand_id',
+        related_name='products',
+        index=True,
+        description='品牌id',
+    )
+    store = fields.ForeignKeyField(
+        'db.Store',
+        source_field='store_id',
+        related_name='products',
+        index=True,
+        description='商铺id',
+    )
     unit = fields.CharField(max_length=32, description='单位(件/台...)')
-    published = fields.BooleanField(unique=True, description='上架状态')
+    published = fields.BooleanField(index=True, description='上架状态')
 
 
 class Item(Model, ModelTimeMixin):
