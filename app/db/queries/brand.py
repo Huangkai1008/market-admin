@@ -17,6 +17,12 @@ async def get_brands(page: int, size: int) -> Tuple[List[Brand], int]:
     return queryset, total
 
 
+async def get_brand(brand_id: int) -> Brand:
+    """获取单个商品品牌"""
+    queryset = await Brand.filter(id=brand_id).first()
+    return queryset
+
+
 async def create_brand(brand_create: BrandCreate) -> Brand:
     """新增商品品牌"""
     create_brand_data = jsonable_encoder(brand_create)

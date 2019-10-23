@@ -11,5 +11,5 @@ class Store(Model, ModelTimeMixin):
     """店铺"""
 
     id = fields.IntField(pk=True)
-    name = fields.CharField(unique=True, max_length=64)  # 店铺名称
-    desc = fields.CharField(null=True, max_length=255)  # 店铺简介
+    name = fields.CharField(unique=True, max_length=64, description='店铺名称')
+    desc = fields.CharField(null=True, max_length=255, description='店铺简介')
