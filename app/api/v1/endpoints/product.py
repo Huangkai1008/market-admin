@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, Body
+from fastapi import APIRouter, Query, Body, Path
 from starlette.status import HTTP_201_CREATED
 
 from app.db.queries import category as category_api
@@ -6,7 +6,7 @@ from app.db.queries import brand as brand_api
 from app.db.queries import store as store_api
 from app.db.queries import product as product_api
 from app.exceptions import BadRequestException
-from app.models.product import ProductRead, ProductCreate, ProductList
+from app.models.product import ProductRead, ProductCreate, ProductUpdate, ProductList
 
 
 router = APIRouter()
@@ -43,4 +43,18 @@ async def create_product(product_create: ProductCreate = Body(...)):
         raise BadRequestException('不存在的商铺')
 
     product = await product_api.create_product(product_create)
+    return product
+
+
+@router.put('/{product_id}', response_model=ProductRead, summary='修改商品')
+async def update_product(
+    product_id=Path(..., ge=1, description='商品id'),
+    product_update: ProductUpdate = Body(...),
+):
+    """修改商品"""
+    product = product_api.get_product(product_id)
+    if not product:
+        raise BadRequestException('不存在的商品')
+
+    product = await product_api.update_product(product_id, product_update)
     return product

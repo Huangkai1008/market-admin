@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 
 from app.db.product import Product
 from app.db.queries.utils import and_pagination
-from app.models.product import ProductCreate
+from app.models.product import ProductCreate, ProductUpdate
 
 
 async def get_products(
@@ -49,7 +49,8 @@ async def get_product(product_id) -> Product:
         brand_name='brand__name',
         store_name='store__name',
     )
-    return products[0]
+
+    return products[0] if products else None
 
 
 async def create_product(product_create: ProductCreate) -> Product:
@@ -58,4 +59,12 @@ async def create_product(product_create: ProductCreate) -> Product:
     product = Product(**product_create_data)
     await product.save()
     product = await get_product(product.id)
+    return product
+
+
+async def update_product(product_id: int, product_update: ProductUpdate) -> Product:
+    """更新商品"""
+    product_update_data = jsonable_encoder(product_update)
+    await Product.get(id=product_id).update(**product_update_data)
+    product = await get_product(product_id)
     return product

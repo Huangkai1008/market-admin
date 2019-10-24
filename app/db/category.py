@@ -17,7 +17,7 @@ class ProductCategory(Model, ModelTimeMixin):
         index=True, description='分类等级  0 --> 1级;  1 --> 2级'
     )
     cat_keywords = fields.CharField(max_length=255, null=True, description='分类关键词')
-    cat_icon = fields.CharField(max_length=255, null=True, description='分类图标')  # 分类图标
+    cat_icon = fields.CharField(max_length=255, null=True, description='分类图标')
     cat_desc = fields.TextField(null=True, description='分类描述')
 
     class Meta:
