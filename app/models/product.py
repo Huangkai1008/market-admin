@@ -58,3 +58,11 @@ class ProductUpdate(OrmModel):
     sub_title: str = Schema(None, max_length=128, title='副标题')
     unit: str = Schema(..., max_length=32, title='单位(件/台...)')
     published: bool = Schema(..., title='上架状态')
+
+
+class ItemBulkCreate(OrmModel):
+    """
+    商品sku-新增
+    """
+
+    specs: List

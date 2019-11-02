@@ -52,9 +52,22 @@ async def update_product(
     product_update: ProductUpdate = Body(...),
 ):
     """修改商品"""
-    product = product_api.get_product(product_id)
+    product = await product_api.get_product(product_id)
     if not product:
         raise BadRequestException('不存在的商品')
 
     product = await product_api.update_product(product_id, product_update)
     return product
+
+
+@router.post('/{product_id}/items', summary='新增商品spu')
+async def create_items(product_id=Path(..., ge=1, description='商品id')):
+    """新增商品sku"""
+    product = await product_api.get_product(product_id)
+    if not product:
+        raise BadRequestException('不存在的商品')
+
+    cat_id = product.cat_id
+    category = await category_api.get_category(cat_id)
+    if not category:
+        raise BadRequestException('不存在的商品分类')
