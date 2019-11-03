@@ -60,9 +60,19 @@ class ProductUpdate(OrmModel):
     published: bool = Schema(..., title='上架状态')
 
 
-class ItemBulkCreate(OrmModel):
+class ItemSpec(OrmModel):
+    spec_name: str = Schema(..., max_length=64, title='规格名称')
+    spec_value: str = Schema(..., title='规格值')
+    spec_type: int = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')
+
+
+class ItemCreate(OrmModel):
     """
     商品sku-新增
     """
 
-    specs: List
+    price: float = Schema(..., ge=0, title='价格')
+    stock: int = Schema(..., ge=0, title='库存')
+    sales: int = Schema(..., ge=0, title='销量')
+    introduction: str = Schema(..., title='商品sku介绍')
+    specs: List[ItemSpec] = Schema(..., title='规格信息')

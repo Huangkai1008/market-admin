@@ -1,12 +1,21 @@
+from typing import List
+
 from fastapi import APIRouter, Query, Body, Path
 from starlette.status import HTTP_201_CREATED
+from tortoise.exceptions import OperationalError
 
 from app.db.queries import category as category_api
 from app.db.queries import brand as brand_api
 from app.db.queries import store as store_api
 from app.db.queries import product as product_api
 from app.exceptions import BadRequestException
-from app.models.product import ProductRead, ProductCreate, ProductUpdate, ProductList
+from app.models.product import (
+    ProductRead,
+    ProductCreate,
+    ProductUpdate,
+    ProductList,
+    ItemCreate,
+)
 
 
 router = APIRouter()
@@ -60,14 +69,23 @@ async def update_product(
     return product
 
 
-@router.post('/{product_id}/items', summary='新增商品spu')
-async def create_items(product_id=Path(..., ge=1, description='商品id')):
+@router.post('/{product_id}/items', summary='新增商品sku')
+async def create_items(
+    product_id=Path(..., ge=1, description='商品id'),
+    item_bulk_create: List[ItemCreate] = Body(...),
+):
     """新增商品sku"""
     product = await product_api.get_product(product_id)
     if not product:
         raise BadRequestException('不存在的商品')
 
-    cat_id = product.cat_id
+    cat_id = product['cat_id'] if isinstance(product, dict) else product.cat_id
     category = await category_api.get_category(cat_id)
     if not category:
         raise BadRequestException('不存在的商品分类')
+
+    try:
+        await product_api.bulk_create_sku(product_id, item_bulk_create)
+    except OperationalError:
+        raise BadRequestException('创建sku错误')
+    return dict()
