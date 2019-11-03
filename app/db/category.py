@@ -30,7 +30,6 @@ class ProductCategorySpec(Model, ModelTimeMixin):
     """
 
     id = fields.IntField(pk=True)
-    spec_number = fields.CharField(max_length=32, description='分类规格编号')  # color ...
     spec_name = fields.CharField(max_length=64, description='分类规格名称')  # 颜色 ...
     join_select = fields.BooleanField(index=True, description='是否可以筛选')
     spec_type = fields.IntField(index=True, description='规格类型  1 销售规格属性 2 展示属性')
@@ -38,4 +37,4 @@ class ProductCategorySpec(Model, ModelTimeMixin):
 
     class Meta:
         table = 'product_category_spec'
-        unique_together = (('cat_id', 'spec_number'), ('cat_id', 'spec_name'))
+        unique_together = ('cat_id', 'spec_name')

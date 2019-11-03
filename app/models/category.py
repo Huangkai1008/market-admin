@@ -48,7 +48,6 @@ class CategorySpec(OrmModel):
     """商品分类规格-查询"""
 
     id: int = Schema(..., title='ID')
-    spec_number: str = Schema(..., max_length=32, title='分类规格编号')
     spec_name: str = Schema(..., max_length=64, title='分类规格名称')
     join_select: bool = Schema(..., title='是否可以筛选')
     spec_type: int = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')
@@ -58,7 +57,6 @@ class CategorySpec(OrmModel):
 class CategorySpecCreate(BaseModel):
     """商品分类规格-创建"""
 
-    spec_number: str = Schema(..., max_length=32, title='分类规格编号')
     spec_name: str = Schema(..., max_length=64, title='分类规格名称')
     join_select: bool = Schema(..., title='是否可以筛选')
     spec_type: int = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')

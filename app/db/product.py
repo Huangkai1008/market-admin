@@ -52,11 +52,10 @@ class ItemSpec(Model, ModelTimeMixin):
     """
 
     item_id = fields.IntField()
-    spec_number = fields.CharField(max_length=32, description='规格编号')  # color
     spec_name = fields.CharField(max_length=64, description='规格名称')  # 颜色
+    spec_type = fields.IntField(index=True, description='规格类型  1 销售规格属性 2 展示属性')
     spec_value = fields.CharField(max_length=128, description='规格值')  # 红
 
     class Meta:
         table = 'item_spec'
-        pk_field = {'item_id', 'spec_number'}
-        unique_together = [('item_id', 'spec_name')]
+        pk_field = {'item_id', 'spec_name'}
