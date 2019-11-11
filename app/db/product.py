@@ -39,6 +39,7 @@ class Item(Model, ModelTimeMixin):
     id = fields.IntField(pk=True)
     sku_number = fields.CharField(max_length=36, unique=True, description='sku编号')
     product_id = fields.IntField(index=True, description='商品id')
+    cat_id = fields.IntField(index=True, description='商品分类id')
     price = fields.FloatField(description='价格')
     stock = fields.IntField(description='库存')
     sales = fields.IntField(description='销量')

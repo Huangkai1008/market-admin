@@ -87,7 +87,9 @@ async def get_items(*, page: int = None, size: int = None) -> Tuple[List[Item], 
 
 
 @atomic()
-async def bulk_create_sku(product_id: int, item_bulk_create: List[ItemCreate]):
+async def bulk_create_sku(
+    product_id: int, cat_id: int, item_bulk_create: List[ItemCreate]
+):
     """批量创建商品sku"""
     item_bulk_create_data = jsonable_encoder(item_bulk_create)
 
@@ -98,7 +100,12 @@ async def bulk_create_sku(product_id: int, item_bulk_create: List[ItemCreate]):
     for index, item_create_data in enumerate(item_bulk_create_data):
         sku_number = ids[index]
         specs = item_create_data.pop('specs')
-        item = Item(**item_create_data, product_id=product_id, sku_number=sku_number)
+        item = Item(
+            **item_create_data,
+            product_id=product_id,
+            sku_number=sku_number,
+            cat_id=cat_id
+        )
         await item.save()
         item_id = item.id
         await ItemSpec.bulk_create(

@@ -69,7 +69,7 @@ async def update_product(
     return product
 
 
-@router.post('/{product_id}/items', summary='新增商品sku')
+@router.post('/{product_id}/items', summary='新增商品sku', status_code=HTTP_201_CREATED)
 async def create_items(
     product_id=Path(..., ge=1, description='商品id'),
     item_bulk_create: List[ItemCreate] = Body(...),
