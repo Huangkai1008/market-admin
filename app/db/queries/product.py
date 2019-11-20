@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple, List, Iterable
 
 from fastapi.encoders import jsonable_encoder
 from tortoise.transactions import atomic
@@ -6,7 +6,7 @@ from tortoise.transactions import atomic
 from app import utils
 from app.db.product import Product, Item, ItemSpec
 from app.db.queries.utils import and_pagination
-from app.models.product import ProductCreate, ProductUpdate, ItemCreate
+from app.models.product import ProductCreate, ProductUpdate, ItemCreate, ItemUpdate
 
 
 async def get_products(
@@ -86,6 +86,12 @@ async def get_items(*, page: int = None, size: int = None) -> Tuple[List[Item], 
     return items, total
 
 
+async def get_item(item_id: int) -> Item:
+    """获取商品sku"""
+    queryset = await Item.get(id=item_id)
+    return queryset
+
+
 @atomic()
 async def bulk_create_sku(
     product_id: int, cat_id: int, item_bulk_create: List[ItemCreate]
@@ -119,3 +125,30 @@ async def bulk_create_sku(
                 for spec in specs
             ]
         )
+
+
+async def update_item(item_id: int, item_update: ItemUpdate) -> Item:
+    """更新商品sku"""
+    item_update_data = jsonable_encoder(item_update)
+    await Item.get(id=item_id).update(**item_update_data)
+    item = await get_item(item_id)
+    return item
+
+
+async def get_item_specs(
+    *, item_id: int = None, item_ids: Iterable = None, item_id_sort: bool = None
+) -> List[ItemSpec]:
+    """获取商品sku规格属性"""
+    conditions = dict()
+    orderings = list()
+
+    if item_id:
+        conditions['item_id'] = item_id
+    if item_ids is not None:
+        conditions['item_id__in'] = item_ids
+
+    if item_id_sort is not None:
+        ordering = 'item_id' if item_id_sort else '-item_id'
+        orderings.append(ordering)
+    items = await ItemSpec.filter(**conditions).order_by(*orderings).all()
+    return items

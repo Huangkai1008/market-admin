@@ -1,6 +1,9 @@
+from operator import attrgetter
 from typing import List
+from itertools import groupby
 
 from fastapi import APIRouter, Query, Body, Path
+from fastapi.encoders import jsonable_encoder
 from starlette.status import HTTP_201_CREATED
 from tortoise.exceptions import OperationalError
 
@@ -15,6 +18,7 @@ from app.models.product import (
     ProductUpdate,
     ProductList,
     ItemCreate,
+    ItemUpdate,
 )
 
 
@@ -57,7 +61,7 @@ async def create_product(product_create: ProductCreate = Body(...)):
 
 @router.put('/{product_id}', response_model=ProductRead, summary='修改商品')
 async def update_product(
-    product_id=Path(..., ge=1, description='商品id'),
+    product_id: int = Path(..., ge=1, description='商品id'),
     product_update: ProductUpdate = Body(...),
 ):
     """修改商品"""
@@ -69,9 +73,29 @@ async def update_product(
     return product
 
 
+@router.get('/{product_id}/items', summary='查看商品sku')
+async def get_items(product_id: int = Path(..., ge=1, description='商品id'),):
+    product = await product_api.get_product(product_id)
+    if not product:
+        raise BadRequestException('不存在的商品')
+
+    items, _ = await product_api.get_items()
+    item_ids = [item.id for item in items]
+    item_specs = await product_api.get_item_specs(item_ids=item_ids, item_id_sort=True)
+    spec_item_group = groupby(item_specs, key=attrgetter('item_id'))
+    item_spec_map = {str(item_id): list(group) for item_id, group in spec_item_group}
+
+    entities = list()
+    for item in items:
+        entity = jsonable_encoder(item)
+        entity['specs'] = item_spec_map.get(str(item.id), [])
+        entities.append(entity)
+    return entities
+
+
 @router.post('/{product_id}/items', summary='新增商品sku', status_code=HTTP_201_CREATED)
 async def create_items(
-    product_id=Path(..., ge=1, description='商品id'),
+    product_id: int = Path(..., ge=1, description='商品id'),
     item_bulk_create: List[ItemCreate] = Body(...),
 ):
     """新增商品sku"""
@@ -89,3 +113,22 @@ async def create_items(
     except OperationalError:
         raise BadRequestException('创建sku错误')
     return dict()
+
+
+@router.put('/{product_id}/items/{item_id}', summary='修改商品sku')
+async def update_items(
+    product_id: int = Path(..., ge=1, description='商品id'),
+    item_update: ItemUpdate = Body(...),
+    item_id: int = Path(..., ge=1, description='sku id'),
+):
+    """修改商品sku"""
+    product = await product_api.get_product(product_id)
+    if not product:
+        raise BadRequestException('不存在的商品')
+
+    item = await product_api.get_item(item_id)
+    if not item:
+        raise BadRequestException('不存在的sku')
+
+    item = await product_api.update_item(item_id, item_update)
+    return item

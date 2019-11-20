@@ -76,3 +76,14 @@ class ItemCreate(OrmModel):
     sales: int = Schema(..., ge=0, title='销量')
     introduction: str = Schema(..., title='商品sku介绍')
     specs: List[ItemSpec] = Schema(..., title='规格信息')
+
+
+class ItemUpdate(OrmModel):
+    """
+    商品sku-更新
+    """
+
+    price: float = Schema(..., ge=0, title='价格')
+    stock: int = Schema(..., ge=0, title='库存')
+    sales: int = Schema(..., ge=0, title='销量')
+    introduction: str = Schema(..., title='商品sku介绍')
