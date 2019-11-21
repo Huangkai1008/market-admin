@@ -52,11 +52,11 @@ class ItemSpec(Model, ModelTimeMixin):
     继承分类规格信息 可在分类规格信息上扩展
     """
 
-    item_id = fields.IntField()
+    id = fields.IntField(pk=True)
+    item_id = fields.IntField(description='sku id')
     spec_name = fields.CharField(max_length=64, description='规格名称')  # 颜色
     spec_type = fields.IntField(index=True, description='规格类型  1 销售规格属性 2 展示属性')
     spec_value = fields.CharField(max_length=128, description='规格值')  # 红
 
     class Meta:
         table = 'item_spec'
-        pk_field = {'item_id', 'spec_name'}

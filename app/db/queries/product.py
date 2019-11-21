@@ -6,7 +6,14 @@ from tortoise.transactions import atomic
 from app import utils
 from app.db.product import Product, Item, ItemSpec
 from app.db.queries.utils import and_pagination
-from app.models.product import ProductCreate, ProductUpdate, ItemCreate, ItemUpdate
+from app.models.product import (
+    ProductCreate,
+    ProductUpdate,
+    ItemCreate,
+    ItemUpdate,
+    ItemSpecCreate,
+    ItemSpecUpdate,
+)
 
 
 async def get_products(
@@ -150,5 +157,36 @@ async def get_item_specs(
     if item_id_sort is not None:
         ordering = 'item_id' if item_id_sort else '-item_id'
         orderings.append(ordering)
-    items = await ItemSpec.filter(**conditions).order_by(*orderings).all()
-    return items
+    item_specs = await ItemSpec.filter(**conditions).order_by(*orderings).all()
+    return item_specs
+
+
+async def get_item_spec(*, spec_id: int) -> ItemSpec:
+    """获取单个sku规格信息"""
+    conditions = dict()
+
+    if spec_id:
+        conditions['id'] = spec_id
+
+    spec = await ItemSpec.filter(**conditions).first()
+    return spec
+
+
+async def create_item_spec(item_id: int, spec_create: ItemSpecCreate) -> ItemSpec:
+    """创建商品sku规格属性"""
+    spec_create_data = jsonable_encoder(spec_create)
+    spec = await ItemSpec.create(**spec_create_data, item_id=item_id)
+    return spec
+
+
+async def update_item_spec(spec_id: int, spec_update: ItemSpecUpdate) -> ItemSpec:
+    """修改商品sku规格属性"""
+    spec_update_data = jsonable_encoder(spec_update)
+    await ItemSpec.get(id=spec_id).update(**spec_update_data)
+    spec = await get_item_spec(spec_id=spec_id)
+    return spec
+
+
+async def delete_item_spec(spec_id: int):
+    """删除商品sku规格属性"""
+    await ItemSpec.get(id=spec_id).delete()

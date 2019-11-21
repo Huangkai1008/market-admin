@@ -1,3 +1,5 @@
+from enum import IntEnum
+
 from pydantic import BaseModel
 
 
@@ -6,3 +8,10 @@ class OrmModel(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SpecType(IntEnum):
+    """规格类型"""
+
+    sales = 1
+    display = 2

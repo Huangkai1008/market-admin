@@ -19,6 +19,8 @@ from app.models.product import (
     ProductList,
     ItemCreate,
     ItemUpdate,
+    ItemSpecCreate,
+    ItemSpecUpdate,
 )
 
 
@@ -132,3 +134,61 @@ async def update_items(
 
     item = await product_api.update_item(item_id, item_update)
     return item
+
+
+@router.post('/{product_id}/items/{item_id}/specs', summary='增加商品规格')
+async def create_item_spec(
+    product_id: int = Path(..., ge=1, description='商品id'),
+    item_id: int = Path(..., ge=1, description='sku id'),
+    spec_create: ItemSpecCreate = Body(...),
+):
+    """新增sku规格"""
+    product = await product_api.get_product(product_id)
+    if not product:
+        raise BadRequestException('不存在的商品')
+
+    item = await product_api.get_item(item_id)
+    if not item:
+        raise BadRequestException('不存在的sku')
+
+    spec = await product_api.create_item_spec(item_id, spec_create)
+    return spec
+
+
+@router.put('/{product_id}/items/{item_id}/specs/{spec_id}', summary='修改商品规格')
+async def update_item_spec(
+    product_id: int = Path(..., ge=1, description='商品id'),
+    item_id: int = Path(..., ge=1, description='sku id'),
+    spec_id: int = Path(..., ge=1, description='规格id'),
+    spec_update: ItemSpecUpdate = Body(...),
+):
+    """修改sku规格"""
+    product = await product_api.get_product(product_id)
+    if not product:
+        raise BadRequestException('不存在的商品')
+
+    item = await product_api.get_item(item_id)
+    if not item:
+        raise BadRequestException('不存在的sku')
+
+    spec = await product_api.update_item_spec(spec_id, spec_update)
+    return spec
+
+
+@router.delete('/{product_id}/items/{item_id}/specs/{spec_id}', summary='删除商品规格')
+async def delete_item_spec(
+    product_id: int = Path(..., ge=1, description='商品id'),
+    item_id: int = Path(..., ge=1, description='sku id'),
+    spec_id: int = Path(..., ge=1, description='规格id'),
+):
+    """删除sku规格"""
+    product = await product_api.get_product(product_id)
+    if not product:
+        raise BadRequestException('不存在的商品')
+
+    item = await product_api.get_item(item_id)
+    if not item:
+        raise BadRequestException('不存在的sku')
+
+    await product_api.delete_item_spec(spec_id)
+    return dict()

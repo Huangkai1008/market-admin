@@ -5,7 +5,7 @@ from typing import List
 
 from pydantic import Schema
 
-from app.models.base import OrmModel
+from app.models.base import OrmModel, SpecType
 
 
 class ProductRead(OrmModel):
@@ -87,3 +87,21 @@ class ItemUpdate(OrmModel):
     stock: int = Schema(..., ge=0, title='库存')
     sales: int = Schema(..., ge=0, title='销量')
     introduction: str = Schema(..., title='商品sku介绍')
+
+
+class ItemSpecCreate(OrmModel):
+    """
+    sku规格-创建
+    """
+
+    spec_name: str = Schema(..., max_length=64, title='规格名称')
+    spec_value: str = Schema(..., title='规格值')
+    spec_type: SpecType = Schema(..., title='规格类型  1 销售规格属性 2 展示属性')
+
+
+class ItemSpecUpdate(OrmModel):
+    """
+    sku规格-修改
+    """
+
+    spec_value: str = Schema(..., title='规格值')
