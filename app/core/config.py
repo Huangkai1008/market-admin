@@ -6,6 +6,7 @@ load_dotenv()
 
 # ================ Project ================
 PROJECT_NAME = str(os.environ.get('PROJECT_NAME'))
+VERSION = str(os.environ.get('VERSION'))
 
 # ================ Mysql ================
 DB_TYPE = str(os.environ.get('DB_TYPE'))

@@ -10,7 +10,7 @@ from starlette.status import (
 )
 
 from app.db import database
-from app.core.config import PROJECT_NAME
+from app.core.config import PROJECT_NAME, VERSION
 from app.api import api_router
 from app.exceptions import BadRequestException
 
@@ -59,5 +59,13 @@ async def server_error(request, exc):
         dict(message='server error'), status_code=HTTP_500_INTERNAL_SERVER_ERROR
     )
 
+
+def get_application() -> FastAPI:
+    """Application Factory"""
+    application = FastAPI(title=PROJECT_NAME, version=VERSION)
+    return application
+
+
+app = get_application()
 
 uvicorn.run(app, host='0.0.0.0', port=8000)
