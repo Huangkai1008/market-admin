@@ -10,23 +10,13 @@ from starlette.status import (
 )
 
 from app.core.config import PROJECT_NAME, VERSION
-from app.db import database
+from app.core.events import startup, shutdown
 from app.api import api_router
 from app.exceptions import BadRequestException
 
 app = FastAPI(title=PROJECT_NAME)
 
 app.include_router(api_router)
-
-
-@app.on_event('startup')
-async def startup():
-    await database.init()
-
-
-@app.on_event('shutdown')
-async def shutdown():
-    await database.disconnect()
 
 
 @app.exception_handler(HTTP_404_NOT_FOUND)
@@ -63,6 +53,9 @@ async def server_error(request, exc):
 def get_application() -> FastAPI:
     """Application Factory"""
     application = FastAPI(title=PROJECT_NAME, version=VERSION)
+
+    application.add_event_handler('startup', startup)
+    application.add_event_handler('shutdown', shutdown)
     return application
 
 
