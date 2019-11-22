@@ -9,8 +9,8 @@ from starlette.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
-from app.db import database
 from app.core.config import PROJECT_NAME, VERSION
+from app.db import database
 from app.api import api_router
 from app.exceptions import BadRequestException
 

@@ -1,17 +1,17 @@
-import os
+from starlette.config import Config
+from starlette.datastructures import Secret
 
-from dotenv import load_dotenv
-
-load_dotenv()
+config = Config('../.env')
 
 # ================ Project ================
-PROJECT_NAME = str(os.environ.get('PROJECT_NAME'))
-VERSION = str(os.environ.get('VERSION'))
+API_PREFIX = '/api'
+VERSION = 'v1'
+PROJECT_NAME: str = config('PROJECT_NAME', cast=str)
 
 # ================ Mysql ================
-DB_TYPE = str(os.environ.get('DB_TYPE'))
-DB_USER = str(os.environ.get('DB_USERNAME'))
-DB_PASSWORD = str(os.environ.get('DB_PASSWORD'))
-DB_HOST = str(os.environ.get('DB_HOST'))
-DB_PORT = int(os.environ.get('DB_PORT'))
-DATABASE = str(os.environ.get('DB_DATABASE'))
+DB_TYPE: str = config('DB_TYPE')
+DB_USER: str = config('DB_USERNAME')
+DB_PASSWORD: Secret = config('DB_PASSWORD', cast=Secret)
+DB_HOST: str = config('DB_HOST')
+DB_PORT: int = config('DB_PORT', cast=int)
+DATABASE: str = config('DB_DATABASE')
