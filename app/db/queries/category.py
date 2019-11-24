@@ -66,9 +66,18 @@ async def get_category_specs(cat_id: int) -> List[ProductCategorySpec]:
     return queryset
 
 
-async def get_category_spec(spec_id: int) -> ProductCategorySpec:
+async def get_category_spec(
+    *, cat_id: int = None, spec_id: int = None
+) -> ProductCategorySpec:
     """获取单个规格信息"""
-    queryset = await ProductCategorySpec.filter(id=spec_id).first()
+    conditions = dict()
+
+    if cat_id:
+        conditions['cat_id'] = cat_id
+    if spec_id:
+        conditions['id'] = spec_id
+
+    queryset = await ProductCategorySpec.filter(**conditions).first()
     return queryset
 
 
@@ -93,5 +102,5 @@ async def update_category_spec(
     """修改商品分类规格"""
     spec_update_data = jsonable_encoder(spec_update)
     await ProductCategorySpec.get(id=spec_id).update(**spec_update_data)
-    spec = await get_category_spec(spec_id)
+    spec = await get_category_spec(spec_id=spec_id)
     return spec
