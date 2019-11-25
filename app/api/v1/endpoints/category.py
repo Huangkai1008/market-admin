@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Query, Body, Path, Depends
+from fastapi import APIRouter, Query, Body, Depends
 from starlette.status import HTTP_201_CREATED
 
 from app.api.dependencies.category import (
@@ -9,7 +9,6 @@ from app.api.dependencies.category import (
 )
 from app.db.category import ProductCategory, ProductCategorySpec
 from app.db.queries import category as category_api
-from app.exceptions import BadRequestException
 from app.models.category import (
     CategoryRead,
     CategoryList,
@@ -60,11 +59,11 @@ async def create_product_category(category_create: CategoryCreate = Body(...)):
 
 @router.put('/{cat_id}', response_model=CategoryRead, summary='修改商品分类')
 async def update_product_category(
-    category: ProductCategory = Depends(get_category_by_id),
+    current_category: ProductCategory = Depends(get_category_by_id),
     category_update: CategoryUpdate = Body(...),
 ):
     """修改商品分类"""
-    cat_id = category.id
+    cat_id = current_category.id
 
     update_category = await category_api.update_category(cat_id, category_update)
     return update_category
@@ -73,9 +72,11 @@ async def update_product_category(
 @router.get(
     '/{cat_id}/specs', response_model=List[CategorySpec], summary='查看商品分类下的规格信息'
 )
-async def get_category_specs(category: ProductCategory = Depends(get_category_by_id),):
+async def get_category_specs(
+    current_category: ProductCategory = Depends(get_category_by_id),
+):
     """查看商品分类下的规格信息"""
-    cat_id = category.id
+    cat_id = current_category.id
 
     specs = await category_api.get_category_specs(cat_id)
     return specs
@@ -83,11 +84,11 @@ async def get_category_specs(category: ProductCategory = Depends(get_category_by
 
 @router.post('/{cat_id}/specs', status_code=HTTP_201_CREATED, summary='新增商品分类下的规格信息')
 async def create_category_specs(
-    category: ProductCategory = Depends(get_category_by_id),
+    current_category: ProductCategory = Depends(get_category_by_id),
     spec_creates: List[CategorySpecCreate] = Body(...),
 ):
     """新增商品分类下的规格信息"""
-    cat_id = category.id
+    cat_id = current_category.id
 
     await category_api.bulk_create_category_specs(cat_id, spec_creates)
     return dict()
@@ -97,11 +98,11 @@ async def create_category_specs(
     '/{cat_id}/specs/{spec_id}', response_model=CategorySpec, summary='修改商品分类下的规格信息'
 )
 async def update_category_spec(
-    category_spec: ProductCategorySpec = Depends(get_category_spec_by_union_id),
+    current_category_spec: ProductCategorySpec = Depends(get_category_spec_by_union_id),
     spec_update: CategorySpecUpdate = Body(...),
 ):
     """修改商品分类下的规格信息"""
-    spec_id = category_spec.id
+    spec_id = current_category_spec.id
 
     spec = await category_api.update_category_spec(spec_id, spec_update)
     return spec
