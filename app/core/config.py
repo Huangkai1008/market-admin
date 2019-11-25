@@ -23,7 +23,7 @@ DB_PORT: int = config('DB_PORT', cast=int)
 DATABASE: str = config('DB_DATABASE')
 
 # ================ Logging ================
-LOGGING_LEVEL: str = config('LOGGING_LEVEL')
+LOGGING_LEVEL: str = config('LOGGING_LEVEL', cast=str, default='INFO')
 logging.basicConfig(
     handlers=[InterceptHandler(level=LOGGING_LEVEL)], level=LOGGING_LEVEL
 )
