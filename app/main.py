@@ -1,5 +1,3 @@
-import uvicorn
-
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
@@ -37,5 +35,3 @@ def get_application() -> FastAPI:
 
 
 app = get_application()
-
-uvicorn.run(app, host='0.0.0.0', port=8000)
