@@ -1,6 +1,19 @@
 version: '3'
 
 services:
+  db:
+    image: mysql
+    restart: always
+    ports:
+      - '3306:3306'
+    volumes:
+      - /data/mysql:/var/lib/mysql
+    networks:
+      - app-network
+  redis:
+     image: redis:alpine
+     networks:
+       - app-network
   app:
     build: .
     ports:
