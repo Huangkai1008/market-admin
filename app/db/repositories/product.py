@@ -17,6 +17,9 @@ from app.models.product import (
 
 
 class ProductRepository(BaseRepository):
+    """
+    商品Repo
+    """
     async def get_products(
         self, page: int, size: int, *, cat_id: int = None
     ) -> Tuple[List[Product], int]:
