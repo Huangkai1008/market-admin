@@ -7,7 +7,7 @@ from starlette.datastructures import Secret
 
 from app.core.logging import InterceptHandler
 
-config = Config('../.env')
+config = Config('.env')
 
 # ================ Project ================
 API_PREFIX = '/api'
