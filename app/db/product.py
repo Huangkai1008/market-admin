@@ -3,14 +3,13 @@ from tortoise.models import Model
 
 from app.db.base import ModelTimeMixin
 
+__all__ = ['Spu', 'Item', 'ItemSpec']
 
-__all__ = ['Product', 'Item', 'ItemSpec']
 
-
-class Product(Model, ModelTimeMixin):
+class Spu(Model, ModelTimeMixin):
     """商品(SPU)"""
 
-    id = fields.IntField(pk=True)
+    id = fields.BigIntField(pk=True)
     product_name = fields.CharField(max_length=64, index=True, description='商品名称')
     product_sn = fields.CharField(max_length=24, unique=True, description='商品货号')
     sub_title = fields.CharField(max_length=128, null=True, description='副标题')
