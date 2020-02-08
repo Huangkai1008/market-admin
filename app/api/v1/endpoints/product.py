@@ -16,7 +16,7 @@ from app.db.repositories.brand import BrandRepository
 from app.db.repositories.category import CategoryRepository
 from app.db.repositories.product import ProductRepository
 from app.db.repositories.store import StoreRepository
-from app.db.product import Product, Item, ItemSpec
+from app.db.product import Spu, Item, ItemSpec
 from app.exceptions import BadRequestException
 from app.models.product import (
     ProductRead,
@@ -79,7 +79,7 @@ async def create_product(
 
 @router.put('/{product_id}', response_model=ProductRead, summary='修改商品')
 async def update_product(
-    current_product: Product = Depends(get_product_by_id),
+    current_product: Spu = Depends(get_product_by_id),
     product_update: ProductUpdate = Body(...),
     product_repo: ProductRepository = Depends(),
 ):

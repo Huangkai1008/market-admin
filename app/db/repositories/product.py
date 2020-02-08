@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from tortoise.transactions import atomic
 
 from app import utils
-from app.db.product import Product, Item, ItemSpec
+from app.db.product import Spu, Item, ItemSpec
 from app.db.repositories.base import BaseRepository
 from app.models.product import (
     ProductCreate,
@@ -23,17 +23,17 @@ class ProductRepository(BaseRepository):
 
     async def get_products(
         self, page: int, size: int, *, cat_id: int = None
-    ) -> Tuple[List[Product], int]:
+    ) -> Tuple[List[Spu], int]:
         """获取商品列表"""
         conditions = dict()
 
         if cat_id is not None:
             conditions['cat_id'] = cat_id
 
-        total = await Product.filter(**conditions).count()
+        total = await Spu.filter(**conditions).count()
 
         products = await self._and_pagination(
-            Product.filter(**conditions), page, size
+            Spu.filter(**conditions), page, size
         ).values(
             'id',
             'product_name',
@@ -50,9 +50,9 @@ class ProductRepository(BaseRepository):
         return products, total
 
     @staticmethod
-    async def get_product(product_id) -> Product:
+    async def get_product(product_id) -> Spu:
         """获取单个商品"""
-        products = await Product.get(id=product_id).values(
+        products = await Spu.get(id=product_id).values(
             'id',
             'product_name',
             'product_sn',
@@ -68,20 +68,20 @@ class ProductRepository(BaseRepository):
 
         return products[0] if products else None
 
-    async def create_product(self, product_create: ProductCreate) -> Product:
+    async def create_product(self, product_create: ProductCreate) -> Spu:
         """创建商品"""
         product_create_data = jsonable_encoder(product_create)
-        product = Product(**product_create_data)
+        product = Spu(**product_create_data)
         await product.save()
         product = await self.get_product(product.id)
         return product
 
     async def update_product(
         self, product_id: int, product_update: ProductUpdate
-    ) -> Product:
+    ) -> Spu:
         """更新商品"""
         product_update_data = jsonable_encoder(product_update)
-        await Product.get(id=product_id).update(**product_update_data)
+        await Spu.get(id=product_id).update(**product_update_data)
         product = await self.get_product(product_id)
         return product
 
